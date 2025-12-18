@@ -1,8 +1,18 @@
-import { SVGAttributes } from 'react';
+import { cn } from '@/lib/utils';
 import logo from '../../images/dilg-main-logo.png';
 
-export default function AppLogoIcon(props: SVGAttributes<SVGElement>) {
+interface Props {
+    className?: string;
+}
+
+export default function AppLogoIcon({ className }: Props) {
     return (
-        <img src={logo} alt="dilgLogo" />
+        <>
+            <img
+                src={logo}
+                alt="dilgLogo"
+                className={cn('h-12 w-12', className)}
+            />
+        </>
     );
 }

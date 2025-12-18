@@ -1,6 +1,7 @@
-import { dashboard, login, register } from '@/routes';
+import { login } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
+import Header from '@/components/header/header'
 
 export default function Welcome({
     canRegister = true,
@@ -18,52 +19,56 @@ export default function Welcome({
                     rel="stylesheet"
                 />
             </Head>
-            <main className="h-screen landing-page">
-                <div></div>
-                <header className="py-4 px-20 flex items-center gap-2">
-                    <img 
-                        src="/Logo/DILG-logo.png" 
-                        alt="DILG Logo" 
-                        className='h-10'
-                    />  
-                    <p className='font-bold text-lg'>DILG RSR</p>
-                </header>
+            <main className="landing-page h-screen">
 
-                <div className='flex items-center justify-center mt-20'>
-                    <section className='px-20 flex w-full'>
-                        <div className='flex w-full items-center justify-center '>
+                <Header />
+
+                <div className="mt-20 flex items-center justify-center">
+                    <section className="flex w-full px-20">
+                        <div className="flex w-full items-center justify-center">
                             {/* Headline and text */}
-                            <div className='w-1/2 flex flex-col gap-6 bg-white p-2'>
-                                <div className=''>
-                                    <h4 className="text-5xl font-bold ">DILG Report Submission System</h4>
-                                    <p className='text-lg font-semibold mt-2'>Department of the Interior and Local Government</p>
+                            <div className="flex w-1/2 flex-col gap-6 bg-white p-2">
+                                <div className="">
+                                    <h4 className="text-5xl font-bold">
+                                        DILG Report Submission System
+                                    </h4>
+                                    <p className="mt-2 text-lg font-semibold">
+                                        Department of the Interior and Local
+                                        Government
+                                    </p>
                                 </div>
-                                
+
                                 <div>
-                                    <p className='text-base my-3 text-gray-700'>A centralized system that enables efficient submission, tracking, and management of DTRs and official reports for DILG field operations.</p>
-                                    <button 
-                                        className='bg-blue-500 py-3 px-8 rounded flex items-center gap-2 text-white '
+                                    <p className="my-3 text-base text-gray-700">
+                                        A centralized system that enables
+                                        efficient submission, tracking, and
+                                        management of DTRs and official reports
+                                        for DILG field operations.
+                                    </p>
+
+                                    <Link
+                                        href={login()}
+                                        className="inline-flex items-center gap-2 rounded bg-blue-500 px-8 py-3 text-white"
                                     >
                                         Login
-                                        <img 
-                                            src="/Icons/sign-in-fill.svg" 
+                                        <img
+                                            src="/Icons/sign-in-fill.svg"
                                             alt="Login Icon"
-                                            className='h-5' 
+                                            className="h-5"
                                         />
-                                    </button>
+                                    </Link>
                                 </div>
                             </div>
 
                             {/* Logo */}
-                            <div className='w-1/2 flex'>
-                                <img 
-                                    src="/Logo/DILG-logo.png" 
-                                    alt="DILG Logo" 
-                                    className='h-[450px] mx-auto'
-                                />  
+                            <div className="flex w-1/2">
+                                <img
+                                    src="/Logo/DILG-logo.png"
+                                    alt="DILG Logo"
+                                    className="mx-auto h-[450px]"
+                                />
                             </div>
-                        </div>  
-                        
+                        </div>
                     </section>
                 </div>
             </main>
