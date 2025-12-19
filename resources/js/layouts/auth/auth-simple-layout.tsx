@@ -81,14 +81,14 @@ const cardVariants = {
 
 const backButtonVariants = {
     hover: {
-        x: -5,
+        x: 5,
         transition: {
             type: 'spring',
-            stiffness: 400,
+            stiffness: 200,
             damping: 10,
         },
     },
-    tap: { scale: 0.95 },
+
 };
 
 export default function AuthSimpleLayout({
