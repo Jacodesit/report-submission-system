@@ -15,7 +15,7 @@ const DarkModeToggle = () => {
     return (
         <button
             onClick={() => setDark(!dark)}
-            className="flex items-center justify-center rounded p-2 hover:bg-gray-200 dark:hover:bg-gray-700"
+            className="flex items-center justify-center rounded p-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-200 ease-in-out cursor-pointer"
         >
             {dark ? <Sun size={20} /> : <Moon size={20} />}
         </button>
