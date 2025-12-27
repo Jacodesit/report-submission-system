@@ -5,4 +5,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified', 'role:focal_person'])->group(function () {
     Route::get('/focal-person/dashboard', [ViewController::class, 'dashboard'])->name('focal-person.dashboard');
+    Route::get('/focal-person/reports',[ViewController::class, 'reports'])->name('focal-person.reports');
 });

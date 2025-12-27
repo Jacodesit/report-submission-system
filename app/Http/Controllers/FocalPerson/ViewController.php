@@ -11,4 +11,8 @@ class ViewController extends Controller
 
         return inertia('focal-person/dashboard/page');
     }
+
+    public function reports(){
+        return inertia('focal-person/reports/page');
+    }
 }
