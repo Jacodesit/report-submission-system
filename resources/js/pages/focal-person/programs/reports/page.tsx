@@ -7,7 +7,7 @@ import { EllipsisVertical, Folder } from 'lucide-react';
 import { Activity, useState } from 'react';
 import { breadcrumbs } from '../../dashboard/page';
 import EmptyReport from '../components/empty-report';
-import ReportDialog from '../components/report-dialog';
+import ReportDialog from './components/report-dialog';
 
 export default function CreateReport() {
     const [open, setOpen] = useState<boolean>(false);

@@ -94,36 +94,6 @@ export default function ReportDialog({
                                     id="final_deadline"
                                 />
                             </div>
-                            {/* If type is required */}
-                            {/* <div className="space-y-2">
-                                <Label
-                                    htmlFor="type"
-                                    className="text-sm font-medium"
-                                >
-                                    Report Type{' '}
-                                    <span className="text-destructive">*</span>
-                                </Label>
-                                <Select name="type" defaultValue={''}>
-                                    <SelectTrigger className="h-10">
-                                        <SelectValue placeholder="Select type" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            <SelectItem value="male">
-                                                Sample TYpe
-                                            </SelectItem>
-                                            <SelectItem value="female">
-                                                Sample TYpe
-                                            </SelectItem>
-                                            <SelectItem value="other">
-                                                Other
-                                            </SelectItem>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                                <InputError message={errors.type} />
-                            </div> */}
-
                             <div className="mt-4 flex justify-end">
                                 <Button type="submit">
                                     {processing

@@ -37,7 +37,7 @@ class ViewController extends Controller
                     ]);
 
         $coordinators = User::role('focal_person')
-                        ->select('id', 'name', 'email', 'avatar')
+                        ->select('id', 'name', 'email')
                         ->get();
 
 

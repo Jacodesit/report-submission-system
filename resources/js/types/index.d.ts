@@ -60,6 +60,7 @@ export interface Report {
     created_by: User<Pick<User, 'id' | 'name' | 'email' | 'avatar'>>;
     deadline: Date;
     final_deadline: Date;
+    form_schema: Array;
     created_at: string;
     updated_at: string;
 }
