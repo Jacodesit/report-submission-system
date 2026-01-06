@@ -76,7 +76,7 @@ class ViewController extends Controller
 
     public function reportSubmissions(Program $program, Report $report){
 
-        $report->load('submissions.fieldOfficer');
+            $report->load('submissions.fieldOfficer');
 
         return inertia('focal-person/programs/reports/report-submissions/page', [
             'program' => $program,

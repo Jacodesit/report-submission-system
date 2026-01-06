@@ -46,10 +46,10 @@ export default function programs() {
                                             <p className="text-sm text-muted-foreground">
                                                 {program.description}
                                             </p>
-                                            <p className="text-sm text-muted-foreground">
+                                            {/* <p className="text-sm text-muted-foreground">
                                                 Coordinator:{' '}
                                                 {program.coordinator.name}
-                                            </p>
+                                            </p> */}
                                         </div>
                                         <div>
                                             <EllipsisVertical className="transition-colors hover:text-muted-foreground" />
