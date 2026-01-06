@@ -39,7 +39,7 @@ export default function ReportDialog({
                 <div className="flex justify-end">
                     <Button type="button" variant={'secondary'}>
                         <Folder className="mr-2 h-4 w-4" />
-                        <span>Create new Report</span>
+                        <span>Create New Report</span>
                     </Button>
                 </div>
             </DialogTrigger>
