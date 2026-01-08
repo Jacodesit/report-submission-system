@@ -49,20 +49,18 @@ export default function ReportDialog({
     const [templateFiles, setTemplateFiles] = useState<FileList | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // Helper: Add a blank field (Always file, Always required)
     const addField = () => {
         setFields([
             ...fields,
             {
                 id: crypto.randomUUID(),
                 label: '',
-                type: 'file', // Hardcoded
-                required: true, // Hardcoded
+                type: 'file',
+                required: true,
             },
         ]);
     };
 
-    // Helper: Update label only
     const updateLabel = (id: string, value: string) => {
         setFields((prev) =>
             prev.map((field) =>
@@ -71,7 +69,6 @@ export default function ReportDialog({
         );
     };
 
-    // Helper: Remove a field
     const removeField = (id: string) => {
         setFields((prev) => prev.filter((f) => f.id !== id));
     };
@@ -99,13 +96,12 @@ export default function ReportDialog({
                     {...ReportController.store.form()}
                     onSuccess={() => {
                         setOpen(false);
-                        setFields([]); // Reset UI on success
+                        setFields([]);
                         setTemplateFiles(null);
                     }}
                 >
                     {({ processing, errors }) => (
                         <div className="space-y-6">
-                            {/* --- SECTION 1: STATIC DETAILS --- */}
                             <div className="space-y-4 rounded-lg border bg-slate-50 p-4">
                                 <div>
                                     <Label htmlFor="title">Report Title</Label>
@@ -164,7 +160,6 @@ export default function ReportDialog({
                                 </div>
                             </div>
 
-                            {/* --- SECTION 2: TEMPLATE UPLOAD --- */}
                             <div className="rounded-lg border border-dashed border-blue-200 bg-blue-50/50 p-4">
                                 <div className="mb-2 flex items-center justify-between">
                                     <Label className="flex items-center gap-2 text-blue-900">
@@ -186,7 +181,7 @@ export default function ReportDialog({
                                         ref={fileInputRef}
                                         type="file"
                                         multiple
-                                        name="template_files[]" // Array name for Laravel
+                                        name="template_files[]"
                                         className="hidden"
                                         onChange={(e) =>
                                             setTemplateFiles(e.target.files)
@@ -228,7 +223,6 @@ export default function ReportDialog({
                                 </div>
                             </div>
 
-                            {/* --- SECTION 3: REQUIRED ATTACHMENTS UI --- */}
                             <div className="pt-2">
                                 <div className="mb-4 flex items-end justify-between border-b pb-2">
                                     <div>
@@ -302,7 +296,6 @@ export default function ReportDialog({
                                 </div>
                             </div>
 
-                            {/* IMPORTANT: Hidden Input to actually submit the JSON data */}
                             <input
                                 type="hidden"
                                 name="form_schema"
