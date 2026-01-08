@@ -38,9 +38,11 @@ export interface User {
     middle_name?: string;
     last_name: string;
     gender: string;
+    birthday: Date | null;
+
     department: string;
     position: string;
-    birthday: Date | null;
+    cluster: 'M&M' | "D'ONE" | null;
     email: string;
     avatar?: string;
     email_verified_at: string | null;
