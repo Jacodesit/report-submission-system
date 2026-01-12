@@ -49,12 +49,6 @@ export default function page() {
                                         <h2 className="truncate text-lg font-semibold">
                                             {submission.field_officer?.name}
                                         </h2>
-                                        <p className="text-sm text-muted-foreground">
-                                            Deadline:{' '}
-                                            {new Date(
-                                                submission.created_at,
-                                            ).toLocaleDateString()}
-                                        </p>
                                     </div>
                                     <div>
                                         <EllipsisVertical className="transition-colors hover:text-muted-foreground" />
