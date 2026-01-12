@@ -14,6 +14,8 @@ export default function page() {
         program: Program;
     }>().props;
 
+    console.log({ reportSubmissions });
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
