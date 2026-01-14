@@ -1,19 +1,17 @@
 import { FlashToaster } from '@/components/flash-toaster';
+import ProgramGridSkeleton from '@/components/skeleton-loader';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import AppLayout from '@/layouts/app-layout';
 import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import { Program, User, type BreadcrumbItem } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, usePage, useRemember, WhenVisible } from '@inertiajs/react';
 import { Eye, EyeClosed } from 'lucide-react';
-import { Activity, useState } from 'react';
-import EmptyProgram from './components/empty-programs';
-import GridView from './components/grid';
-import ListView from './components/list';
+import { useState } from 'react';
+import ToggleGridList from '../../../components/toggle-list-grid';
 import ProgramDialog from './components/program-dialog';
 import ReviewProgram from './components/review';
-import ToggleGridList from '../../../components/toggle-list-grid';
+import Programs from './programs';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -22,18 +20,18 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Programs() {
+export default function ProgramsPage() {
     const [open, setOpen] = useState<boolean>(false);
-    const [isList, setIsList] = useState<boolean>(false);
+    const [isList, setIsList] = useRemember<boolean>(false);
     const [selectReviewProgram, setSelecReviewProgram] =
         useState<Program | null>();
     const [reviewOpen, setReviewOpen] = useState<boolean>(true);
 
-    const { programs } = usePage<{ programs: Program[] }>().props;
-
     const { coordinators } = usePage<{
         coordinators: Pick<User, 'id' | 'name' | 'email' | 'avatar'>[];
     }>().props;
+
+    console.log({ isList });
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -73,61 +71,18 @@ export default function Programs() {
                             setSelecReviewProgram(null);
                     }}
                 >
-                    <ScrollArea className="relative h-[600px] w-full">
-                        <div
-                            className={cn(
-                                'space-x-3 transition-all duration-300 ease-in-out',
-                                reviewOpen ? 'mr-[350px]' : 'mr-0',
-                            )}
-                        >
-                            <div className="">
-                                <h1 className="mb-3 font-semibold">
-                                    All Programs
-                                </h1>
-                            </div>
-                            <div>
-                                <Activity
-                                    mode={
-                                        programs.length === 0
-                                            ? 'visible'
-                                            : 'hidden'
-                                    }
-                                >
-                                    <EmptyProgram setIsOpen={setOpen} />
-                                </Activity>
-
-                                <Activity
-                                    mode={
-                                        programs.length > 0
-                                            ? 'visible'
-                                            : 'hidden'
-                                    }
-                                >
-                                    {isList ? (
-                                        <ListView
-                                            programs={programs}
-                                            selectReviewProgram={
-                                                selectReviewProgram
-                                            }
-                                            setSelecReviewProgram={
-                                                setSelecReviewProgram
-                                            }
-                                        />
-                                    ) : (
-                                        <GridView
-                                            programs={programs}
-                                            selectReviewProgram={
-                                                selectReviewProgram
-                                            }
-                                            setSelecReviewProgram={
-                                                setSelecReviewProgram
-                                            }
-                                        />
-                                    )}
-                                </Activity>
-                            </div>
-                        </div>
-                    </ScrollArea>
+                    <WhenVisible
+                        data="programs"
+                        fallback={<ProgramGridSkeleton />}
+                    >
+                        <Programs
+                            isList={isList}
+                            reviewOpen={reviewOpen}
+                            selectReviewProgram={selectReviewProgram}
+                            setOpen={setOpen}
+                            setSelecReviewProgram={setSelecReviewProgram}
+                        />
+                    </WhenVisible>
 
                     {/* Review Panel with Slide Transition */}
                     <div

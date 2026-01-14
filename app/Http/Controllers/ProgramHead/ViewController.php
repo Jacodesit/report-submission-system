@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Program;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ViewController extends Controller
 {
@@ -42,8 +43,8 @@ class ViewController extends Controller
 
 
 
-        return inertia('program-head/programs/page', [
-            'programs' => $programs,
+        return Inertia::render('program-head/programs/page', [
+            'programs' => Inertia::defer(fn () => $programs),
             'coordinators' => $coordinators,
         ]);
     }

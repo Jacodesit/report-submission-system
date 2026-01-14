@@ -2,15 +2,14 @@ import ViewController from '@/actions/App/Http/Controllers/ProgramHead/ViewContr
 import Back from '@/components/back';
 import AppLayout from '@/layouts/app-layout';
 import { breadcrumbs } from '@/pages/field-officer/dashboard/page';
-import { Program, Report } from '@/types';
+import { Report } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { EllipsisVertical, Folder } from 'lucide-react';
 import { Activity } from 'react';
 
 export default function Reports() {
-    const { reports, program } = usePage<{
+    const { reports } = usePage<{
         reports: Report[];
-        program: Program;
     }>().props;
 
     return (

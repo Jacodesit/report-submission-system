@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { dateFormatter } from '@/lib/utils';
 import { ReportSubmission } from '@/types';
 import { EllipsisVertical, File } from 'lucide-react';
 
@@ -62,19 +63,13 @@ export default function GridView({
 
                                 <p className="text-xs text-muted-foreground">
                                     Submitted on{' '}
-                                    {new Date(
-                                        submission.created_at,
-                                    ).toLocaleDateString('en-US', {
-                                        month: 'short',
-                                        day: 'numeric',
-                                        year: 'numeric',
-                                    })}
+                                    {dateFormatter(submission.created_at)}
                                 </p>
                             </div>
                             <div className="space-x-2">
                                 <Button
-                                    variant={'ghost'}
-                                    className="transition-colors duration-150 hover:bg-destructive/80"
+                                    variant={'outline'}
+                                    className="transition-colors duration-150 hover:bg-destructive/80 hover:text-white"
                                 >
                                     Return
                                 </Button>
