@@ -46,17 +46,14 @@ export default function SampleTemplate({ templates }: Props) {
                                     <div className="flex gap-1">
                                         <Button
                                             asChild
-                                            variant="outline"
-                                            size="sm"
-                                            className="h-7 gap-1 text-xs"
-                                        ></Button>
-                                        <Button
-                                            asChild
                                             variant="secondary"
                                             size="sm"
                                             className="h-7 gap-1 text-xs"
                                         >
-                                            <a href={temp.original_url} download>
+                                            <a
+                                                href={temp.original_url}
+                                                download
+                                            >
                                                 <Download className="h-3 w-3" />
                                                 Download
                                             </a>

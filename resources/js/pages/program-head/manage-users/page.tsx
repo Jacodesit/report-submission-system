@@ -26,8 +26,6 @@ export default function ManageUsers() {
     const usersData = users.data;
     const [selectedUsers, setSelectedUsers] = useState<Set<number>>(new Set());
 
-    console.log({ users });
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="User Management" />
