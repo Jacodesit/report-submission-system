@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
@@ -9,7 +10,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class ReportSubmission extends Model implements HasMedia
 {
-    use InteractsWithMedia;
+    use InteractsWithMedia, HasFactory;
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -27,6 +28,13 @@ class ReportSubmission extends Model implements HasMedia
         'report_id',
         'field_officer_id',
         'status',
+        'timeliness',
+        'description',
+        'data'
+    ];
+
+    protected $casts = [
+        'data' => 'array',
     ];
 
     public function report()

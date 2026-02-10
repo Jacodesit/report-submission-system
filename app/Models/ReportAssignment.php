@@ -23,7 +23,6 @@ class ReportAssignment extends Model
     protected $fillable = [
         'report_id',
         'field_officer_id',
-        'cluster_id',
         'is_submitted',
         'submitted_at',
         'status',
@@ -40,8 +39,8 @@ class ReportAssignment extends Model
         return $this->belongsTo(User::class, 'field_officer_id');
     }
 
-    public function cluster()
-    {
-        return $this->belongsTo(Cluster::class, 'cluster_id');
-    }
+    // public function cluster()
+    // {
+    //     return $this->belongsTo(Cluster::class, 'cluster_id');
+    // }
 }

@@ -1,61 +1,55 @@
-import ViewController from '@/actions/App/Http/Controllers/FocalPerson/ViewController';
+import ToggleGridList from '@/components/toggle-list-grid';
 import AppLayout from '@/layouts/app-layout';
 import { Program } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
-import { EllipsisVertical, Folder } from 'lucide-react';
+import { usePage } from '@inertiajs/react';
 import { Activity, useState } from 'react';
 import { breadcrumbs } from '../dashboard/page';
-
-interface Report {
-    title: string;
-    deadline: Date;
-    final_deadline: Date;
-}
+import FilterBtn from '../../../components/filter';
+import GriddView from './components/grid-view';
+import ListView from './components/list-view';
 
 export default function programs() {
-    const [open, setOpen] = useState<boolean>(false);
+    const [isList, setIsLIst] = useState<boolean>(false);
+    const [selectedYear, setSelectedYear] = useState<number | null>(null);
 
     const { programs } = usePage<{ programs: Program[] }>().props;
+
+    const filteredPrograms = selectedYear
+        ? programs.filter(
+              (p) => new Date(p.created_at).getFullYear() === selectedYear,
+          )
+        : programs;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                <Activity mode={programs.length <= 0 ? 'visible' : 'hidden'}>
-                    <h1>No programs yet</h1>
+                <div className="flex items-center justify-between">
+                    {/* <div></div> */}
+                    <h1 className="text-center text-xl font-semibold sm:text-2xl">
+                        All Programs
+                    </h1>
+                    <div className="flex items-center gap-3">
+                        <FilterBtn onSelect={setSelectedYear} />
+                        <ToggleGridList isList={isList} setIsList={setIsLIst} />
+                    </div>
+                </div>
+
+                <Activity
+                    mode={filteredPrograms.length <= 0 ? 'visible' : 'hidden'}
+                >
+                    <h1 className="text-center text-muted-foreground">
+                        No programs yet
+                    </h1>
                 </Activity>
 
-                <Activity mode={programs.length > 0 ? 'visible' : 'hidden'}>
-                    <div className="grid grid-cols-3 gap-5">
-                        {programs.map((program, index) => (
-                            <Link
-                                key={index}
-                                href={ViewController.reports(program)}
-                            >
-                                <div className="flex items-center gap-5 rounded-xl border bg-background/50 px-4 py-2">
-                                    <div>
-                                        <Folder />
-                                    </div>
-                                    <div className="flex w-full items-center justify-between">
-                                        <div>
-                                            <h2 className="truncate text-lg font-semibold">
-                                                {program.name}
-                                            </h2>
-                                            <p className="text-sm text-muted-foreground">
-                                                {program.description}
-                                            </p>
-                                            <p className="text-sm text-muted-foreground">
-                                                Coordinator:{' '}
-                                                {program.coordinator.name}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <EllipsisVertical className="transition-colors hover:text-muted-foreground" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
+                <Activity
+                    mode={filteredPrograms.length > 0 ? 'visible' : 'hidden'}
+                >
+                    {isList ? (
+                        <ListView programs={filteredPrograms} />
+                    ) : (
+                        <GriddView programs={filteredPrograms} />
+                    )}
                 </Activity>
             </div>
         </AppLayout>

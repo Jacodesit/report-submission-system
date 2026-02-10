@@ -13,7 +13,22 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+
+            // emp code
+            $table->string('employee_code')->nullable();
+
+            // Personal Info
             $table->string('name');
+            $table->string('first_name');
+            $table->string('middle_name')->nullable();
+            $table->string('last_name');
+            $table->string('gender');
+            $table->string('department');
+            $table->string('position');
+            $table->date('birthday')->nullable();
+            $table->enum('cluster', ["M&M", "D''ONE"])->nullable();
+
+            // Accounts
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

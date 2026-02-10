@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Report extends Model
+class Report extends Model implements HasMedia
 {
+
+    use InteractsWithMedia, HasFactory;
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -27,6 +32,13 @@ class Report extends Model
         'created_by',
         'deadline',
         'final_deadline',
+        'form_schema'
+    ];
+
+    protected $casts = [
+        'form_schema' => 'array',
+        'deadline' => 'date',
+        'final_deadline' => 'date',
     ];
 
     // ────────────────────────────────────────────────

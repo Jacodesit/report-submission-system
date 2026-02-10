@@ -32,7 +32,17 @@ export interface SharedData {
 
 export interface User {
     id: number;
+    employee_code?: string;
     name: string;
+    first_name: string;
+    middle_name?: string;
+    last_name: string;
+    gender: string;
+    birthday: Date | null;
+
+    department: string;
+    position: string;
+    cluster: 'M&M' | "D'ONE" | null;
     email: string;
     avatar?: string;
     email_verified_at: string | null;
@@ -47,7 +57,7 @@ export interface Program {
     id: number;
     name: string;
     description: string;
-    coordinator: User;
+    coordinator: User<Pick<User, 'id' | 'name' | 'email' | 'avatar'>>;
     created_at: string;
     updated_at: string;
 }
@@ -60,19 +70,58 @@ export interface Report {
     created_by: User<Pick<User, 'id' | 'name' | 'email' | 'avatar'>>;
     deadline: Date;
     final_deadline: Date;
+    form_schema: Array;
+    templates: Media[];
     created_at: string;
     updated_at: string;
 }
 
-
-export interface ReportSubmission {
-  id: string;
-  report_id: string;
-  field_officer_id: number;
-  status: 'draft' | 'submitted';
-  created_at: string;
-  updated_at: string;
-
-  report?: Report;
-  field_officer?: User;
+export interface Media {
+    id: string;
+    name: string;
+    file_name: string;
+    mime_type: string;
+    size: number;
+    original_url: string;
 }
+
+// Add to types/index.d.ts
+export interface ReportSubmission {
+    id: string;
+    report_id: string;
+    field_officer: User<Pick<User, 'id' | 'name' | 'email' | 'avatar'>>;
+    status: 'draft' | 'submitted' | 'accepted' | 'returned';
+    timeliness: string | null;
+    media: Media[];
+    created_at: string;
+    updated_at: string;
+    remarks: string;
+    description: string
+
+    // Relationships
+    fieldOfficer?: Pick<User, 'id' | 'name' | 'email' | 'avatar'>;
+    media?: Media[];
+    report?: Report; // Added report relationship
+}
+
+export interface LaravelPaginator<T> {
+    data: T[];
+    current_page: number;
+    first_page_url: string;
+    from: number | null;
+    last_page: number;
+    last_page_url: string;
+    links: {
+        url: string | null;
+        label: string;
+        active: boolean;
+    }[];
+    next_page_url: string | null;
+    path: string;
+    per_page: number;
+    prev_page_url: string | null;
+    to: number | null;
+    total: number;
+}
+
+export type FilterType = 'all' | 'pending' | 'rejected' | 'accepted';
