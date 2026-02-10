@@ -30,9 +30,11 @@ class ReportController extends Controller
         $report = auth()->user()->createdReports()->create($validated);
 
         if($request->hasFile('template_files')){
+
             foreach($request->file('template_files') as $file){
                 $report->addMedia($file)->toMediaCollection('templates');
             }
+
         }
 
 

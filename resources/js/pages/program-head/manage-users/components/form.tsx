@@ -1,4 +1,3 @@
-import ViewController from '@/actions/App/Http/Controllers/ProgramHead/ViewController';
 import UserController from '@/actions/App/Http/Controllers/UserController';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -11,7 +10,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Form, router } from '@inertiajs/react';
+import { Form } from '@inertiajs/react';
 import { Upload, User } from 'lucide-react';
 import { useRef, useState } from 'react';
 
@@ -49,7 +48,7 @@ export default function UserForm({ setOpen }: Props) {
         <Form
             {...UserController.store.form()}
             onSuccess={() => {
-                router.visit(ViewController.manageUsers());
+                setOpen(false);
             }}
             className="space-y-8 pb-8"
         >

@@ -13,7 +13,7 @@ Route::get('/', function () {
 
 Route::get('/downloads/folder/{report}', function (\App\Models\Report $report) {
     $zipFileName = 'report-' . $report->id . '-submissions.zip';
-    
+
     $tempFile = tempnam(sys_get_temp_dir(), 'zip') . '.zip';
 
     $zip = new ZipArchive();
@@ -25,10 +25,10 @@ Route::get('/downloads/folder/{report}', function (\App\Models\Report $report) {
 
     foreach ($report->submissions as $submission) {
         // Create readable folder name with officer name
-        $officerName = $submission->fieldOfficer ? 
-            \Illuminate\Support\Str::slug($submission->fieldOfficer->name) : 
+        $officerName = $submission->fieldOfficer ?
+            \Illuminate\Support\Str::slug($submission->fieldOfficer->name) :
             'unknown-officer';
-        
+
         foreach ($submission->getMedia('submission_attachments') as $media) {
             $filePath = $media->getPath();
             if (file_exists($filePath)) {
@@ -53,8 +53,6 @@ Route::middleware(['auth', 'verified', 'role.redirect'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
-
-   
 
 
 });

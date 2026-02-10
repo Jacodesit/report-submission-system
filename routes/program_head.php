@@ -15,7 +15,6 @@ Route::middleware(['auth', 'verified', 'role:program_head'])->group(function () 
     // POST
     Route::post('/program-head/manage-users', [UserController::class, 'store'])->name('program-head.store');
     Route::post('/program-head/programs',[ProgramController::class, 'store'])->name('program-head.programs.store');
-    
 
 
     // DELETE

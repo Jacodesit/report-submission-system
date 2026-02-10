@@ -90,11 +90,13 @@ export interface ReportSubmission {
     id: string;
     report_id: string;
     field_officer: User<Pick<User, 'id' | 'name' | 'email' | 'avatar'>>;
-    status: 'draft' | 'submitted';
+    status: 'draft' | 'submitted' | 'accepted' | 'returned';
     timeliness: string | null;
     media: Media[];
     created_at: string;
     updated_at: string;
+    remarks: string;
+    description: string
 
     // Relationships
     fieldOfficer?: Pick<User, 'id' | 'name' | 'email' | 'avatar'>;

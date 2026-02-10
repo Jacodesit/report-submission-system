@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FocalPerson\ViewController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReportSubmissionController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified', 'role:focal_person'])->group(function () {
@@ -13,4 +14,8 @@ Route::middleware(['auth', 'verified', 'role:focal_person'])->group(function () 
 
     //POST
     Route::post('/focal-person/programs/reports',[ReportController::class, 'store'])->name('focal-person.programs.reports.create');
+
+    //patch
+    Route::patch('/focal-person/report-submissions/{reportSubmission}/update-status', [ReportSubmissionController::class, 'updateStatus'])->name('focal-person.programs.reports.report-submissions.update-status');
+
 });

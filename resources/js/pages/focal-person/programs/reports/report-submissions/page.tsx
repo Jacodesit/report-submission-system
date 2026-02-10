@@ -7,9 +7,10 @@ import { breadcrumbs } from '@/pages/focal-person/dashboard/page';
 import { Program, Report, ReportSubmission } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { Download, Grid2x2, List } from 'lucide-react';
-import { Activity } from 'react';
+import { Activity, useState } from 'react';
 import GridView from './components/grid-view';
 import ListView from './components/list-view';
+import ReportSubmissionDrawer from './components/report-submission-drawer';
 
 export default function page() {
     const { report, reportSubmissions, program } = usePage<{
@@ -20,7 +21,15 @@ export default function page() {
 
     const { mode: viewMode, updateMode: setViewMode } = useViewMode();
 
-    // console.log({ reportSubmissions });
+    // Lift drawer state to parent
+    const [selectedSubmission, setSelectedSubmission] =
+        useState<ReportSubmission | null>(null);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+    const handleCardClick = (submission: ReportSubmission) => {
+        setSelectedSubmission(submission);
+        setIsDrawerOpen(true);
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -78,12 +87,25 @@ export default function page() {
                     mode={reportSubmissions.length > 0 ? 'visible' : 'hidden'}
                 >
                     {viewMode === 'grid' ? (
-                        <GridView reportSubmissions={reportSubmissions} />
+                        <GridView
+                            reportSubmissions={reportSubmissions}
+                            onCardClick={handleCardClick}
+                        />
                     ) : (
-                        <ListView reportSubmissions={reportSubmissions} />
+                        <ListView
+                            reportSubmissions={reportSubmissions}
+                            onRowClick={handleCardClick}
+                        />
                     )}
                 </Activity>
             </div>
+
+            {/* Single drawer instance shared by both views */}
+            <ReportSubmissionDrawer
+                submission={selectedSubmission}
+                isOpen={isDrawerOpen}
+                onClose={() => setIsDrawerOpen(false)}
+            />
         </AppLayout>
     );
 }

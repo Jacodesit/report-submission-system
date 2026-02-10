@@ -13,7 +13,7 @@ class ReportSubmissionFactory extends Factory
         return [
             'id' => Str::uuid(),
             'report_id' => Report::inRandomOrder()->value('id'),
-            'field_officer_id' => 1, 
+            'field_officer_id' => 1,
             'status' => $this->faker->randomElement(['draft', 'submitted']),
             'remarks' => $this->faker->optional()->sentence(),
             'data' => $this->faker->randomElement([
