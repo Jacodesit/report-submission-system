@@ -3,8 +3,8 @@
 import ToggleGridList from '@/components/toggle-list-grid';
 import AppLayout from '@/layouts/app-layout';
 import { Program, LaravelPaginator } from '@/types';
-import { usePage, router } from '@inertiajs/react';
-import { Activity, useState } from 'react';
+import { usePage } from '@inertiajs/react';
+import { useState } from 'react';
 import { breadcrumbs } from '../dashboard/page';
 import FilterBtn from '../../../components/filter';
 import GriddView from './components/grid-view';
@@ -35,11 +35,11 @@ export default function Programs() {
             params.year = year;
         }
 
-        router.get(route('programs.index'), params, {
-            preserveScroll: true,
-            preserveState: true,
-            onFinish: () => setIsFiltering(false)
-        });
+        // router.get(route('programs.index'), params, {
+        //     preserveScroll: true,
+        //     preserveState: true,
+        //     onFinish: () => setIsFiltering(false)
+        // });
     };
 
     // Show loading when filtering or initial load
