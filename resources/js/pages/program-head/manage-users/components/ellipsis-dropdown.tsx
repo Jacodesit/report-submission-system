@@ -25,14 +25,14 @@ export default function EllipsisDropdown({ user }: { user: User }) {
                 <DropdownMenuItem>
                     <Link
                         href={ViewController.viewUser(user)}
-                        className="flex w-full cursor-pointer items-center justify-between gap-2 px-4 py-2.5 text-sm transition-colors hover:bg-muted focus:bg-muted"
+                        className="flex w-full cursor-pointer items-center justify-between gap-2 py-2.5 text-sm transition-colors hover:bg-muted focus:bg-muted"
                     >
                         <span>View</span>
                         <Eye className="h-4 w-4 text-muted-foreground" />
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                    className="flex cursor-pointer items-center justify-between gap-2 px-4 py-2.5 text-sm text-destructive transition-colors hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive"
+                    className="flex cursor-pointer items-center justify-between gap-2 py-2.5 text-sm text-destructive transition-colors hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive"
                     onClick={() => {
                         // Add your delete handler here
                         console.log('Delete user:', user.id);
