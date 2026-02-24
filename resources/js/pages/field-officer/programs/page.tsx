@@ -4,7 +4,7 @@ import { Pagination } from '@/components/ui/pagination';
 import { useViewMode } from '@/hooks/use-view-mode';
 import AppLayout from '@/layouts/app-layout';
 import { LaravelPaginator, Program } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import {
 
     EllipsisVertical,
@@ -34,6 +34,7 @@ export default function Page() {
 
     return (
         <AppLayout>
+            <Head title="Programs" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <div className="flex items-center justify-between">
                     <div>
