@@ -84,9 +84,9 @@ export default function ReportSubmissionDialog({
                     type="button"
                     variant="outline"
                     disabled
-                    className="gap-2 opacity-60"
+                    className="gap-2 opacity-60 text-xs lg:text-sm"
                 >
-                    <FileText className="h-4 w-4" />
+                    <FileText className="h-4 w-4 " />
                     Already Submitted
                 </Button>
             )}
