@@ -58,27 +58,36 @@ export default function ProgramsPage() {
                         setSelecReviewProgram(null);
                 }}
             >
-                <div className="mt-4 flex justify-end gap-2 px-4">
-                    <ProgramDialog
-                        coordinators={coordinators}
-                        open={open}
-                        setOpen={setOpen}
-                    />
-                    <Button
-                        onClick={() => {
-                            setReviewOpen((prev) => !prev);
-                        }}
-                        variant={'outline'}
-                    >
-                        {reviewOpen ? <EyeClosed /> : <Eye />}
-                        {reviewOpen ? 'Hide' : 'Show'} Preview
-                    </Button>
-                    <FilterBtn onSelect={setSelectedYear} />
-                    <ToggleGridList isList={isList} setIsList={setIsList} />
+                {/* Action Buttons - Responsive */}
+                <div className="mt-4 flex flex-col gap-2 px-4 sm:flex-row sm:justify-end sm:gap-2">
+                    <div className="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto">
+                        <ProgramDialog
+                            coordinators={coordinators}
+                            open={open}
+                            setOpen={setOpen}
+                        />
+                        <Button
+                            onClick={() => {
+                                setReviewOpen((prev) => !prev);
+                            }}
+                            variant={'outline'}
+                            className="flex-1 sm:flex-none"
+                        >
+                            {reviewOpen ? <EyeClosed className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            <span className="hidden sm:inline">
+                                {reviewOpen ? 'Hide' : 'Show'} Preview
+                            </span>
+                            <span className="sm:hidden">
+                                {reviewOpen ? 'Hide' : 'Show'}
+                            </span>
+                        </Button>
+                        <FilterBtn onSelect={setSelectedYear} />
+                        <ToggleGridList isList={isList} setIsList={setIsList} />
+                    </div>
                 </div>
 
                 <div
-                    className="relative h-full overflow-hidden border-t p-4"
+                    className="relative h-full overflow-hidden border-t p-2 sm:p-4"
                     onClick={(e) => {
                         if (e.target === e.currentTarget)
                             setSelecReviewProgram(null);
@@ -88,15 +97,18 @@ export default function ProgramsPage() {
                         data={'programs'}
                         fallback={<ProgramGridSkeleton />}
                     >
-                        <ScrollArea className="relative h-[600px] w-full">
+                        <ScrollArea className="relative h-[500px] w-full sm:h-[600px]">
                             <div
                                 className={cn(
-                                    'space-x-3 transition-all duration-300 ease-in-out',
-                                    reviewOpen ? 'mr-[350px]' : 'mr-0',
+                                    'transition-all duration-300 ease-in-out',
+                                    reviewOpen
+                                        ? 'sm:mr-[350px]'
+                                        : 'sm:mr-0',
+                                    'mr-0' // No margin on mobile
                                 )}
                             >
-                                <div className="">
-                                    <h1 className="mb-3 font-semibold">
+                                <div className="px-2 sm:px-0">
+                                    <h1 className="mb-3 font-semibold text-foreground">
                                         All Programs
                                     </h1>
                                 </div>
@@ -145,14 +157,27 @@ export default function ProgramsPage() {
                         </ScrollArea>
                     </Deferred>
 
-                    {/* Review Panel with Slide Transition */}
+                    {/* Review Panel - Responsive Slide */}
                     <div
                         className={cn(
-                            'absolute top-0 right-0 h-full w-[350px] border-l bg-background transition-transform duration-300 ease-in-out',
-                            reviewOpen ? 'translate-x-0' : 'translate-x-full',
+                            'fixed bottom-0 right-0 top-auto z-50 h-[50vh] w-full border-l bg-background transition-transform duration-300 ease-in-out sm:absolute sm:top-0 sm:h-full sm:w-[350px]',
+                            reviewOpen
+                                ? 'translate-y-0 sm:translate-x-0'
+                                : 'translate-y-full sm:translate-y-0 sm:translate-x-full',
+                            'rounded-t-xl border-t shadow-lg sm:rounded-none sm:border-t-0 sm:shadow-none'
                         )}
                     >
                         <ReviewProgram program={selectReviewProgram} />
+
+                        {/* Mobile Close Handle */}
+                        {reviewOpen && (
+                            <button
+                                onClick={() => setReviewOpen(false)}
+                                className="absolute top-2 right-2 rounded-full bg-muted p-1.5 sm:hidden"
+                            >
+                                <EyeClosed className="h-4 w-4" />
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
