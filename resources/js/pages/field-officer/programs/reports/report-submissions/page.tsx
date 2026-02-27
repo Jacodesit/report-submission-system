@@ -70,9 +70,9 @@ export default function page() {
                         <div className="absolute -top-8 -right-8 h-32 w-32 rounded-full bg-primary/5 blur-3xl" />
                         <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-primary/5 blur-3xl" />
 
-                        <div className="relative flex items-start justify-between gap-6">
+                        <div className="relative lg:flex lg:items-start lg:justify-between gap-6">
                             <div className="flex-1">
-                                <h1 className="mb-3 text-3xl font-bold tracking-tight">
+                                <h1 className="mb-3 text-lg lg:text-3xl font-bold tracking-tight">
                                     {report.title}
                                 </h1>
                                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -92,7 +92,7 @@ export default function page() {
 
                             {/* Enhanced Deadline Badge */}
                             <div
-                                className={`inline-flex items-center gap-3 rounded-xl px-5 py-3 shadow-sm transition-all ${
+                                className={`mt-5 lg:mt-0 inline-flex items-center gap-3 rounded-xl px-5 py-3 shadow-sm transition-all ${
                                     isOverdue
                                         ? 'border-2 border-destructive/30 bg-destructive/10 text-destructive shadow-destructive/10'
                                         : daysUntilDeadline <= 3
@@ -127,7 +127,7 @@ export default function page() {
                                               : 'Deadline'}
                                     </span>
 
-                                    <span className="text-sm font-bold">
+                                    <span className="text-xs lg:text-sm font-bold">
                                         {deadlineDate.toLocaleDateString(
                                             'en-US',
                                             {
@@ -187,10 +187,10 @@ export default function page() {
                                     {/* Details Section */}
                                     <div className="flex-1 space-y-4">
                                         <div>
-                                            <h3 className="text-xl font-bold text-foreground">
+                                            <h3 className="text-lg lg:text-xl font-bold text-foreground">
                                                 Report Submitted
                                             </h3>
-                                            <p className="mt-1 text-sm text-muted-foreground">
+                                            <p className="mt-1 text-xs lg:text-sm text-muted-foreground">
                                                 Your report has been
                                                 successfully submitted and is
                                                 under review
@@ -228,15 +228,15 @@ export default function page() {
                                                     <span className="font-semibold text-foreground">
                                                         {reportSubmission?.created_at
                                                             ? new Date(
-                                                                  reportSubmission.created_at,
-                                                              ).toLocaleDateString(
-                                                                  'en-US',
-                                                                  {
-                                                                      month: 'long',
-                                                                      day: 'numeric',
-                                                                      year: 'numeric',
-                                                                  },
-                                                              )
+                                                                    reportSubmission.created_at,
+                                                                ).toLocaleDateString(
+                                                                    'en-US',
+                                                                    {
+                                                                        month: 'long',
+                                                                        day: 'numeric',
+                                                                        year: 'numeric',
+                                                                    },
+                                                                )
                                                             : 'N/A'}
                                                     </span>
                                                 </div>
@@ -253,15 +253,15 @@ export default function page() {
                                             Uploaded{' '}
                                             {reportSubmission?.created_at
                                                 ? new Date(
-                                                      reportSubmission.created_at,
-                                                  ).toLocaleTimeString(
-                                                      'en-US',
-                                                      {
-                                                          hour: 'numeric',
-                                                          minute: '2-digit',
-                                                          hour12: true,
-                                                      },
-                                                  )
+                                                        reportSubmission.created_at,
+                                                    ).toLocaleTimeString(
+                                                        'en-US',
+                                                        {
+                                                            hour: 'numeric',
+                                                            minute: '2-digit',
+                                                            hour12: true,
+                                                        },
+                                                    )
                                                 : ''}
                                         </span>
                                     </div>
