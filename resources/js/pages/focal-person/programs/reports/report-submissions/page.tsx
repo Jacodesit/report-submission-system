@@ -3,8 +3,7 @@ import Back from '@/components/back';
 import { Button } from '@/components/ui/button';
 import { useViewMode } from '@/hooks/use-view-mode';
 import AppLayout from '@/layouts/app-layout';
-import { breadcrumbs } from '@/pages/focal-person/dashboard/page';
-import { Program, Report, ReportSubmission } from '@/types';
+import { BreadcrumbItem, Program, Report, ReportSubmission } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { Download, Grid2x2, List } from 'lucide-react';
 import { Activity, useState } from 'react';
@@ -30,6 +29,13 @@ export default function page() {
         setSelectedSubmission(submission);
         setIsDrawerOpen(true);
     };
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: `Programs/${program.name}/Reports/${report.title}/Report Submissions`,
+            href: ViewController.reportSubmissions([program, report]).url,
+        },
+    ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

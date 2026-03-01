@@ -6,6 +6,8 @@ use App\Models\Report;
 use App\Models\ReportSubmission;
 use App\Notifications\ReportSubmissionAccepted;
 use App\Notifications\ReportSubmissionReturned;
+use App\Notifications\ReportSubmissionSubmittedConfirmation;
+use App\Notifications\ReportSubmissionSubmittedForFocalPerson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -81,6 +83,12 @@ class ReportSubmissionController extends Controller
                 'data' => $finalData
             ]);
 
+            $submission->load(['report.program', 'fieldOfficer']);
+
+            $submission->fieldOfficer->notify(new ReportSubmissionSubmittedConfirmation($submission));
+            $submission->report->coordinator->notify(new ReportSubmissionSubmittedForFocalPerson($submission));
+
+
             return redirect()->back()->with('success', 'Report submitted successfully.');
     }
 
@@ -111,6 +119,8 @@ class ReportSubmissionController extends Controller
 
             $reportSubmission->fieldOfficer->notify(new ReportSubmissionReturned($reportSubmission));
         }
+
+
 
         $data = [
             'status' => $request->status,

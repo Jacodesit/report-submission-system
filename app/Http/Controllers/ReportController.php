@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Notifications\NewReportAdded;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class ReportController extends Controller
 {
@@ -46,6 +49,12 @@ class ReportController extends Controller
             }
 
         }
+
+        $fieldOfficers = User::role('field_officer')->get();
+
+        Notification::send($fieldOfficers, new NewReportAdded($report));
+
+
 
 
         return redirect()->back()->with('success', 'Report created successfully.');

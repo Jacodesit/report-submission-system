@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\Report;
 use App\Models\ReportSubmission;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,7 +16,7 @@ class NewReportAdded extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(public ReportSubmission $report_submission)
+    public function __construct(public Report $report)
     {
         //
     }
@@ -56,12 +57,12 @@ class NewReportAdded extends Notification
         return [
             'type'       => 'new_report_submission_required',
             'title'      => 'New report submission required',
-            'message'    => "A new report \"{$this->report_submission->report->title}\" has been assigned to you. Please submit it before the deadline.",
-            'report_submission_id'  => $this->report_submission->id,
-            'report_title' => $this->report_submission->report->title,
+            'message'    => "A new report \"{$this->report->title}\" has been assigned to you. Please submit it before the deadline.",
+            'report_id'  => $this->report->id,
+            'report_title' => $this->report->title,
             'action_url' => route('field-officer.programs.reports.report-submissions', [
-                'program' => $this->report_submission->report->program,
-                'report' => $this->report_submission->report
+                'program' => $this->report->program,
+                'report' => $this->report
             ]),
             'icon'       => 'document',
         ];

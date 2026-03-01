@@ -1,6 +1,7 @@
 import ViewController from '@/actions/App/Http/Controllers/FieldOfficer/ViewController';
 import Back from '@/components/back';
 import AppLayout from '@/layouts/app-layout';
+import { breadcrumbs } from '@/pages/field-officer/dashboard/page';
 import { Program, Report, ReportSubmission } from '@/types';
 import { usePage } from '@inertiajs/react';
 import {
@@ -70,7 +71,7 @@ export default function page() {
     };
 
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <div className="flex h-full flex-1 flex-col gap-6 overflow-x-auto p-6">
                 {/* Header Section */}
                 <div className="flex flex-col gap-6">

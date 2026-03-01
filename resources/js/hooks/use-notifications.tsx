@@ -7,12 +7,12 @@ export function useNotifications() {
     }, []);
 
     const markAllAsRead = useCallback(async () => {
-        console.log('All goods');
         await axios.patch('/notifications/read-all');
     }, []);
 
     const remove = useCallback(async (id: string) => {
         await axios.delete(`/notifications/${id}`);
+        console.log('All goods');
     }, []);
 
     const removeAll = useCallback(async (id: string) => {

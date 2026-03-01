@@ -19,20 +19,46 @@ class ViewController extends Controller
 
     public function programs(Request $request)
     {
-        $perPage = $request->get('per_page', 12);
-
+        $user = auth()->user();
         $programs = Program::with('coordinator')
-            ->orderBy('created_at', 'desc')
-            ->paginate($perPage);
+            ->paginate(10)
+            ->through(function ($program) use ($user) {
+                return [
+                    'id' => $program->id,
+                    'name' => $program->name,
+                    'description' => $program->description,
+                    'coordinator' => $program->coordinator,
+
+                    // add this indicator
+                    'has_pending_reports' => $program->hasPendingReportsForUser($user->id),
+                ];
+            });
 
         return inertia('field-officer/programs/page', compact('programs'));
     }
 
     public function reports(Program $program)
     {
-        $reports = $program->reports()->get();
+        $user = auth()->user();
 
-        return inertia('field-officer/programs/reports/page', compact('reports', 'program'));
+        $reports = $program->reports()
+            ->with('coordinator')
+            ->paginate(12)
+            ->through(function ($report) use ($user) {
+                return [
+                    'id'                => $report->id,
+                    'title'             => $report->title,
+                    'description'       => $report->description,
+                    'deadline'          => $report->deadline,
+                    'final_deadline'    => $report->final_deadline,
+                    'submission_status' => $report->submissionStatusForUser($user->id),
+                ];
+            });
+
+        return inertia('field-officer/programs/reports/page', [
+            'reports' => Inertia::scroll($reports),
+            'program' => $program,
+        ]);
     }
 
     public function reportSubmissions(Program $program, Report $report)
@@ -130,19 +156,19 @@ class ViewController extends Controller
             ->orderBy('created_at', 'desc');
 
         // Apply filter - We'll implement this later
-        // if ($filter !== 'all') {
-        //     switch ($filter) {
-        //         case 'pending':
-        //             $query->whereIn('status', ['pending', 'submitted']);
-        //             break;
-        //         case 'accepted':
-        //             $query->whereIn('status', ['accepted', 'approved']);
-        //             break;
-        //         case 'rejected':
-        //             $query->where('status', 'rejected');
-        //             break;
-        //     }
-        // }
+        if ($filter !== 'all') {
+            switch ($filter) {
+                case 'pending':
+                    $query->whereIn('status', ['pending', 'submitted']);
+                    break;
+                case 'accepted':
+                    $query->whereIn('status', ['accepted', 'approved']);
+                    break;
+                case 'rejected':
+                    $query->where('status', 'rejected');
+                    break;
+            }
+        }
 
         // Get paginated results using Laravel's built-in paginator
         $submissions = $query->paginate($perPage);
@@ -158,7 +184,7 @@ class ViewController extends Controller
         $notifications = auth()->user()
             ->notifications()
             ->latest()
-            ->paginate(20)
+            ->paginate(5)
             ->through(function ($notification){
                 return [
                     'id' => $notification->id,
@@ -166,6 +192,7 @@ class ViewController extends Controller
                     'message' => $notification->data['message'] ?? '',
                     'created_at' => $notification->created_at,
                     'read_at' => $notification->read_at,
+                    'action_url' => $notification->data['action_url'] ?? null
                 ];
             });
 

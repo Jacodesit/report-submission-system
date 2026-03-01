@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ReportSubmissionController from '@/actions/App/Http/Controllers/ReportSubmissionController';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -14,7 +16,6 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { Report } from '@/types';
-
 import { Form } from '@inertiajs/react';
 import {
     AlertCircle,
@@ -103,7 +104,6 @@ export default function ReportSubmissionDialog({
                         type="button"
                         variant="default"
                         className="shadow-sm"
-                        disabled={isDeadlinePassed}
                     >
                         <Folder className="mr-2 h-4 w-4" />
                         Submit Report
@@ -152,6 +152,7 @@ export default function ReportSubmissionDialog({
                         setAnswers({});
                         setUploadedFiles({});
                     }}
+                    className="px-6 pb-6"
                 >
                     {({ processing, errors }) => (
                         <div className="space-y-8 px-6 pb-6">
@@ -551,14 +552,10 @@ export default function ReportSubmissionDialog({
                                     </Button>
                                     <Button
                                         type="submit"
-                                        disabled={
-                                            processing || isDeadlinePassed
-                                        }
+                                        disabled={processing}
                                         className={cn(
                                             'min-w-[140px] px-6',
-                                            isDeadlinePassed
-                                                ? 'cursor-not-allowed bg-gray-400 hover:bg-gray-400'
-                                                : 'bg-blue-600 hover:bg-blue-700',
+                                            'bg-blue-600 hover:bg-blue-700',
                                         )}
                                     >
                                         {processing ? (
@@ -566,8 +563,6 @@ export default function ReportSubmissionDialog({
                                                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                                                 Submitting...
                                             </div>
-                                        ) : isDeadlinePassed ? (
-                                            'Deadline Passed'
                                         ) : (
                                             'Submit Report'
                                         )}
