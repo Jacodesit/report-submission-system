@@ -43,6 +43,7 @@ class ViewController extends Controller
 
         $reports = $program->reports()
             ->with('coordinator')
+            ->latest()
             ->paginate(12)
             ->through(function ($report) use ($user) {
                 return [
@@ -93,6 +94,17 @@ class ViewController extends Controller
 
             'templates' => $report
                 ->getMedia('templates')
+                ->map(fn($media) => [
+                    'id' => $media->id,
+                    'name' => $media->name,
+                    'file_name' => $media->file_name,
+                    'mime_type' => $media->mime_type,
+                    'size' => $media->size,
+                    'original_url' => $media->original_url,
+                ]),
+
+            'references' => $report
+                ->getMedia('references')
                 ->map(fn($media) => [
                     'id' => $media->id,
                     'name' => $media->name,

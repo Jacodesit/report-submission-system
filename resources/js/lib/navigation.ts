@@ -57,7 +57,10 @@ export function mainNavigationPath(role: string): NavItem[] {
                     title: 'Notifications',
                     href: FocalPersonNavigationPath.notifications().url,
                     icon: Bell,
-                    showNotificationBadge: true,
+                    badge: {
+                        countKey: 'notifications_count',
+                        variant: 'notification',
+                    },
                 },
             ];
         case 'program_head':
