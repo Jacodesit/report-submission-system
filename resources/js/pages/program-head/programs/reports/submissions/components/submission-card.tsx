@@ -85,9 +85,9 @@ export default function SubmissionCard({
 }) {
     const [expanded, setExpanded] = useState(false);
     const timeliness = submission.timeliness
-        ? (TIMELINESS_CONFIG[
-              submission.timeliness as keyof typeof TIMELINESS_CONFIG
-          ] ?? null)
+            ? (TIMELINESS_CONFIG[
+                    submission.timeliness as keyof typeof TIMELINESS_CONFIG
+            ] ?? null)
         : null;
 
     const media: Media[] = submission.media ?? [];

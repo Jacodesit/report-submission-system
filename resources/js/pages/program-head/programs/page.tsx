@@ -52,7 +52,7 @@ export default function ProgramsPage() {
             <FlashToaster />
 
             <div
-                className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl"
+                className="flex h-full flex-1 flex-col gap-2 rounded-xl"
                 onClick={(e) => {
                     if (e.target === e.currentTarget)
                         setSelecReviewProgram(null);

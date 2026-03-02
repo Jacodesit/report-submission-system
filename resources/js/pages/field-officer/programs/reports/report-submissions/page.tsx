@@ -1,7 +1,8 @@
 import ViewController from '@/actions/App/Http/Controllers/FieldOfficer/ViewController';
 import Back from '@/components/back';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem, Program, Report, ReportSubmission } from '@/types';
+import { breadcrumbs } from '@/pages/field-officer/dashboard/page';
+import { Program, Report, ReportSubmission } from '@/types';
 import { usePage } from '@inertiajs/react';
 import {
     AlertCircle,
@@ -13,17 +14,38 @@ import {
     User,
 } from 'lucide-react';
 import { Activity, useState } from 'react';
+import EditReportSubmissionDialog from './components/edit-report-submission-dialog';
 import EmptyReportSubmission from './components/empty-submission';
 import ReportSubmissionDialog from './components/report-submission-dialog';
 import SampleTemplate from './components/sample-template';
 
+const STATUS_MAP = {
+    submitted: {
+        text: 'Submitted',
+        style: 'text-emerald-600 dark:text-emerald-400',
+    },
+    returned: {
+        text: 'Returned',
+        style: 'text-red-600 dark:text-red-400',
+    },
+    accepted: {
+        text: 'Accepted',
+        style: 'text-blue-600 dark:text-blue-400',
+    },
+    draft: {
+        text: 'Draft',
+        style: 'text-gray-600 dark:text-gray-400',
+    },
+};
+
 export default function page() {
-    const [open, setOpen] = useState<boolean>(false);
+    const [submitOpen, setSubmitOpen] = useState<boolean>(false);
+    const [editOpen, setEditOpen] = useState<boolean>(false);
 
     const { program, report, reportSubmission, hasSubmitted } = usePage<{
         program: Program;
         report: Report;
-        reportSubmission: ReportSubmission;
+        reportSubmission: ReportSubmission & { media?: any[] };
         hasSubmitted: boolean;
     }>().props;
 
@@ -43,12 +65,10 @@ export default function page() {
         (deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
     );
 
-    const breadcrumbs: BreadcrumbItem[] = [
-        {
-            title: `Programs/${program.name}/Reports/${report.title}/Report Submissions`,
-            href: ViewController.reportSubmissions([program, report]).url,
-        },
-    ];
+    const statusInfo = STATUS_MAP[reportSubmission?.status] ?? {
+        text: 'Unknown',
+        style: 'text-gray-600 dark:text-gray-400',
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -57,12 +77,22 @@ export default function page() {
                 <div className="flex flex-col gap-6">
                     <div className="flex items-center justify-between">
                         <Back link={ViewController.reports(program)} />
-                        <ReportSubmissionDialog
-                            open={open}
-                            hasSubmitted={hasSubmitted}
-                            setOpen={setOpen}
-                            report={report}
-                        />
+                        {/* Show submit dialog if not yet submitted, edit dialog if already submitted */}
+                        {hasSubmitted && reportSubmission ? (
+                            <EditReportSubmissionDialog
+                                open={editOpen}
+                                setOpen={setEditOpen}
+                                report={report}
+                                submission={reportSubmission}
+                            />
+                        ) : (
+                            <ReportSubmissionDialog
+                                open={submitOpen}
+                                hasSubmitted={hasSubmitted}
+                                setOpen={setSubmitOpen}
+                                report={report}
+                            />
+                        )}
                     </div>
 
                     {/* Title and Deadline Card */}
@@ -70,9 +100,9 @@ export default function page() {
                         <div className="absolute -top-8 -right-8 h-32 w-32 rounded-full bg-primary/5 blur-3xl" />
                         <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-primary/5 blur-3xl" />
 
-                        <div className="relative flex items-start justify-between gap-6">
+                        <div className="relative lg:flex lg:items-start lg:justify-between gap-6">
                             <div className="flex-1">
-                                <h1 className="mb-3 text-3xl font-bold tracking-tight">
+                                <h1 className="mb-3 text-lg lg:text-3xl font-bold tracking-tight">
                                     {report.title}
                                 </h1>
                                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -92,22 +122,21 @@ export default function page() {
 
                             {/* Enhanced Deadline Badge */}
                             <div
-                                className={`inline-flex items-center gap-3 rounded-xl px-5 py-3 shadow-sm transition-all ${
+                                className={`mt-5 lg:mt-0 inline-flex items-center gap-3 rounded-xl px-3 py-2 lg:px-5 lg:py-3 shadow-sm transition-all ${
                                     isOverdue
                                         ? 'border-2 border-destructive/30 bg-destructive/10 text-destructive shadow-destructive/10'
                                         : daysUntilDeadline <= 3
-                                          ? 'border-2 border-amber-500/30 bg-amber-500/10 text-amber-700 shadow-amber-500/10 dark:text-amber-400'
-                                          : 'border-2 border-emerald-500/30 bg-emerald-500/10 text-emerald-700 shadow-emerald-500/10 dark:text-emerald-400'
+                                            ? 'border-2 border-amber-500/30 bg-amber-500/10 text-amber-700 shadow-amber-500/10 dark:text-amber-400'
+                                            : 'border-2 border-emerald-500/30 bg-emerald-500/10 text-emerald-700 shadow-emerald-500/10 dark:text-emerald-400'
                                 }`}
                             >
-                                {/* Icon */}
                                 <div
                                     className={`rounded-full p-2 ${
                                         isOverdue
                                             ? 'bg-destructive/20'
                                             : daysUntilDeadline <= 3
-                                              ? 'bg-amber-500/20'
-                                              : 'bg-emerald-500/20'
+                                                ? 'bg-amber-500/20'
+                                                : 'bg-emerald-500/20'
                                     }`}
                                 >
                                     {isOverdue ? (
@@ -117,7 +146,6 @@ export default function page() {
                                     )}
                                 </div>
 
-                                {/* Text */}
                                 <div className="flex flex-col leading-tight">
                                     <span className="text-xs font-medium opacity-80">
                                         {isOverdue
@@ -127,7 +155,7 @@ export default function page() {
                                               : 'Deadline'}
                                     </span>
 
-                                    <span className="text-sm font-bold">
+                                    <span className="text-xs lg:text-sm font-bold">
                                         {deadlineDate.toLocaleDateString(
                                             'en-US',
                                             {
@@ -155,7 +183,7 @@ export default function page() {
 
                 {/* Empty State */}
                 <Activity mode={!reportSubmission ? 'visible' : 'hidden'}>
-                    <EmptyReportSubmission setIsOpen={setOpen} />
+                    <EmptyReportSubmission setIsOpen={setSubmitOpen} />
                 </Activity>
 
                 {/* Single Submission Card */}
@@ -165,9 +193,11 @@ export default function page() {
                             <h2 className="text-lg font-semibold text-foreground/90">
                                 Your Submission
                             </h2>
-                            <div className="flex items-center gap-2 rounded-lg bg-emerald-500/10 px-3 py-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                            <div
+                                className={`flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium ${statusInfo.style}`}
+                            >
                                 <CheckCircle2 className="h-4 w-4" />
-                                <span>Submitted</span>
+                                <span>{statusInfo.text}</span>
                             </div>
                         </div>
 
@@ -187,10 +217,10 @@ export default function page() {
                                     {/* Details Section */}
                                     <div className="flex-1 space-y-4">
                                         <div>
-                                            <h3 className="text-xl font-bold text-foreground">
+                                            <h3 className="text-lg lg:text-xl font-bold text-foreground">
                                                 Report Submitted
                                             </h3>
-                                            <p className="mt-1 text-sm text-muted-foreground">
+                                            <p className="mt-1 text-xs lg:text-sm text-muted-foreground">
                                                 Your report has been
                                                 successfully submitted and is
                                                 under review
@@ -208,7 +238,7 @@ export default function page() {
                                                     <span className="text-xs font-medium text-muted-foreground">
                                                         Submitted By
                                                     </span>
-                                                    <span className="font-semibold text-foreground">
+                                                    <span className="text-sm lg:text-base font-semibold text-foreground">
                                                         {reportSubmission
                                                             ?.field_officer
                                                             ?.name || 'N/A'}
@@ -225,18 +255,18 @@ export default function page() {
                                                     <span className="text-xs font-medium text-muted-foreground">
                                                         Submission Date
                                                     </span>
-                                                    <span className="font-semibold text-foreground">
+                                                    <span className="text-sm lg:text-base font-semibold text-foreground">
                                                         {reportSubmission?.created_at
                                                             ? new Date(
-                                                                  reportSubmission.created_at,
-                                                              ).toLocaleDateString(
-                                                                  'en-US',
-                                                                  {
-                                                                      month: 'long',
-                                                                      day: 'numeric',
-                                                                      year: 'numeric',
-                                                                  },
-                                                              )
+                                                                    reportSubmission.created_at,
+                                                                ).toLocaleDateString(
+                                                                    'en-US',
+                                                                    {
+                                                                        month: 'long',
+                                                                        day: 'numeric',
+                                                                        year: 'numeric',
+                                                                    },
+                                                                )
                                                             : 'N/A'}
                                                     </span>
                                                 </div>
@@ -247,24 +277,34 @@ export default function page() {
 
                                 {/* Footer Actions */}
                                 <div className="mt-6 flex items-center justify-between border-t pt-4">
-                                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <div className="flex items-center gap-2 text-xs lg:text-sm text-muted-foreground">
                                         <Upload className="h-4 w-4" />
                                         <span>
                                             Uploaded{' '}
                                             {reportSubmission?.created_at
                                                 ? new Date(
-                                                      reportSubmission.created_at,
-                                                  ).toLocaleTimeString(
-                                                      'en-US',
-                                                      {
-                                                          hour: 'numeric',
-                                                          minute: '2-digit',
-                                                          hour12: true,
-                                                      },
-                                                  )
+                                                        reportSubmission.created_at,
+                                                    ).toLocaleTimeString(
+                                                        'en-US',
+                                                        {
+                                                            hour: 'numeric',
+                                                            minute: '2-digit',
+                                                            hour12: true,
+                                                        },
+                                                    )
                                                 : ''}
                                         </span>
                                     </div>
+
+                                    {/* Edit button inside the card as a secondary entry point */}
+                                    {/* {reportSubmission && (
+                                        <EditReportSubmissionDialog
+                                            open={editOpen}
+                                            setOpen={setEditOpen}
+                                            report={report}
+                                            submission={reportSubmission}
+                                        />
+                                    )} */}
                                 </div>
                             </div>
                         </div>
