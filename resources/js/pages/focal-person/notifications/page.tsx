@@ -1,7 +1,7 @@
 import { useNotifications } from '@/hooks/use-notifications';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
-import { NotificationItem, type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import {
     Bell,
@@ -10,14 +10,30 @@ import {
     Clock3,
     ExternalLink,
     Filter,
+    Loader2,
     Trash2,
 } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: dashboard().url },
     { title: 'Notifications', href: '#' },
 ];
+
+interface NotificationItem {
+    id: string;
+    title: string;
+    message: string;
+    created_at: string;
+    read_at: string | null;
+    action_url: string | null;
+}
+
+interface NotificationPaginator {
+    data: NotificationItem[];
+    next_page_url: string | null;
+    total: number;
+}
 
 type NotificationFilter = 'all' | 'unread' | 'read';
 
@@ -31,17 +47,8 @@ function formatDateTime(value: string) {
     }).format(new Date(value));
 }
 
-// Maps notification title keywords to a color theme
-// Extend this as you add more notification types
-function getNotificationTheme(title: string): {
-    unreadBorder: string;
-    unreadBg: string;
-    badge: string;
-    markReadBtn: string;
-    viewBtn: string;
-} {
+function getNotificationTheme(title: string) {
     const t = title.toLowerCase();
-
     if (t.includes('approved') || t.includes('success')) {
         return {
             unreadBorder: 'border-emerald-200',
@@ -61,7 +68,6 @@ function getNotificationTheme(title: string): {
             viewBtn: 'bg-red-600 hover:bg-red-700',
         };
     }
-    // default: indigo (submitted/pending/etc)
     return {
         unreadBorder: 'border-indigo-100',
         unreadBg: 'bg-indigo-50',
@@ -73,17 +79,59 @@ function getNotificationTheme(title: string): {
 
 export default function NotificationsPage() {
     const { notifications } = usePage<{
-        notifications: { data: NotificationItem[] };
+        notifications: NotificationPaginator;
     }>().props;
 
+    // Because Inertia::scroll() merges data on each page load,
+    // `notifications.data` is always the full accumulated list.
     const notificationList = notifications?.data ?? [];
-    const { markAsRead, markAllAsRead, remove, removeAll } = useNotifications();
+    const nextPageUrl = notifications?.next_page_url ?? null;
 
+    const { markAsRead, markAllAsRead, remove } = useNotifications();
     const [filter, setFilter] = useState<NotificationFilter>('all');
     const [localReadMap, setLocalReadMap] = useState<Record<string, boolean>>(
         {},
     );
+    const [loading, setLoading] = useState(false);
 
+    const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+    // ── Load next page ──────────────────────────────────────────────────────
+    // Inertia::scroll() handles the merge; we just navigate to the next URL
+    // with `preserveState + preserveScroll + only: ['notifications']`.
+    const loadMore = useCallback(() => {
+        if (!nextPageUrl || loading) return;
+        setLoading(true);
+
+        router.get(
+            nextPageUrl,
+            {},
+            {
+                preserveState: true,
+                preserveScroll: true,
+                only: ['notifications'],
+                onFinish: () => setLoading(false),
+            },
+        );
+    }, [nextPageUrl, loading]);
+
+    // ── IntersectionObserver sentinel ───────────────────────────────────────
+    useEffect(() => {
+        const el = sentinelRef.current;
+        if (!el) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) loadMore();
+            },
+            { rootMargin: '200px' },
+        );
+
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, [loadMore]);
+
+    // ── Derived state ───────────────────────────────────────────────────────
     const normalized = useMemo(
         () =>
             notificationList.map((item) => ({
@@ -102,6 +150,7 @@ export default function NotificationsPage() {
     const unreadCount = normalized.filter((n) => !n.isRead).length;
     const readCount = normalized.length - unreadCount;
 
+    // ── Handlers ─────────────────────────────────────────────────────────────
     const markNotificationAsRead = (id: string) => {
         markAsRead(id);
         setLocalReadMap((prev) => ({ ...prev, [id]: true }));
@@ -114,37 +163,27 @@ export default function NotificationsPage() {
         setLocalReadMap(next);
     };
 
-    // Click the card body → mark as read + navigate
     const handleCardClick = (item: NotificationItem & { isRead: boolean }) => {
-        if (!item.isRead) {
-            markNotificationAsRead(item.id);
-        }
-        if (item.action_url) {
-            router.visit(item.action_url);
-        }
+        if (!item.isRead) markNotificationAsRead(item.id);
+        if (item.action_url) router.visit(item.action_url);
     };
 
-    // Click the "View" button → same behavior, but explicit
     const handleViewClick = (
         e: React.MouseEvent,
         item: NotificationItem & { isRead: boolean },
     ) => {
-        e.stopPropagation(); // prevent card click from double-firing
-        if (!item.isRead) {
-            markNotificationAsRead(item.id);
-        }
-        if (item.action_url) {
-            router.visit(item.action_url);
-        }
+        e.stopPropagation();
+        if (!item.isRead) markNotificationAsRead(item.id);
+        if (item.action_url) router.visit(item.action_url);
     };
 
     const handleMarkAsRead = (e: React.MouseEvent, id: string) => {
-        e.stopPropagation(); // prevent card click
+        e.stopPropagation();
         markNotificationAsRead(id);
     };
 
     const handleRemove = (e: React.MouseEvent, id: string) => {
-        e.stopPropagation(); // prevent card click
+        e.stopPropagation();
         remove(id);
     };
 
@@ -152,12 +191,12 @@ export default function NotificationsPage() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Notifications" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                {/* Header Card */}
-                <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+                {/* ── Header Card ─────────────────────────────────────────── */}
+                <div className="rounded-xl border bg-white dark:bg-[#141414] dark:border p-4 shadow-sm">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                         <div>
-                            <h1 className="flex items-center gap-2 text-xl font-semibold text-foreground">
-                                <BellRing className="h-5 w-5 text-primary" />
+                            <h1 className="flex items-center gap-2 text-lg lg:text-xl font-semibold text-foreground">
+                                <BellRing className="h-4 w-4 lg:h-5 lg:w-5 text-primary" />
                                 Notifications
                             </h1>
                             <p className="mt-1 text-sm text-muted-foreground">
@@ -168,7 +207,7 @@ export default function NotificationsPage() {
                         <button
                             onClick={markAllNotificationsAsRead}
                             disabled={unreadCount === 0}
-                            className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary/20 hover:bg-accent hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
+                            className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-xs lg:text-sm font-medium text-foreground transition-colors hover:border-primary/20 hover:bg-accent hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             <CheckCheck className="h-4 w-4" />
                             Mark all as read
@@ -176,13 +215,13 @@ export default function NotificationsPage() {
                     </div>
 
                     {/* Stats */}
-                    <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                    <div className="mt-4 grid gap-3 sm:grid-cols-3 ">
                         <div className="rounded-lg border border-border bg-muted/50 px-4 py-3">
                             <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
                                 Total
                             </p>
                             <p className="mt-1 text-lg font-semibold text-foreground">
-                                {normalized.length}
+                                {notifications.total}
                             </p>
                         </div>
                         <div className="rounded-lg border border-primary/20 bg-primary/5 px-4 py-3">
@@ -204,9 +243,9 @@ export default function NotificationsPage() {
                     </div>
                 </div>
 
-                {/* List Card */}
-                <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-                    {/* Filter Row */}
+                {/* ── List Card ────────────────────────────────────────────── */}
+                <div className="rounded-xl bg-white dark:bg-[#141414] dark:border p-4 shadow-sm">
+                    {/* Filter row */}
                     <div className="mb-4 flex items-center gap-2">
                         <Filter className="h-4 w-4 text-muted-foreground" />
                         <p className="text-sm font-medium text-foreground">
@@ -220,8 +259,8 @@ export default function NotificationsPage() {
                                         onClick={() => setFilter(value)}
                                         className={`rounded-full px-3 py-1.5 text-xs font-semibold tracking-wide capitalize transition-colors ${
                                             filter === value
-                                                ? 'bg-indigo-100 text-indigo-700'
-                                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                                ? 'bg-gray-300 text-foreground dark:bg-gray-300/20 dark:text-accent-foreground'
+                                                : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-[#010101] dark:text-foreground dark:hover:bg-gray-800'
                                         }`}
                                     >
                                         {value}
@@ -231,14 +270,14 @@ export default function NotificationsPage() {
                         </div>
                     </div>
 
-                    {/* Notification List */}
+                    {/* Notification list */}
                     {filtered.length === 0 ? (
-                        <div className="rounded-lg border border-dashed border-border bg-muted/20 px-4 py-12 text-center">
-                            <Bell className="mx-auto h-9 w-9 text-muted-foreground/40" />
-                            <p className="mt-3 text-sm font-medium text-foreground">
+                        <div className="rounded-lg border border-dashed border-gray-200 px-4 py-12 text-center">
+                            <Bell className="mx-auto h-9 w-9 text-gray-300" />
+                            <p className="mt-3 text-sm font-medium text-gray-700">
                                 No notifications found
                             </p>
-                            <p className="mt-1 text-xs text-muted-foreground">
+                            <p className="mt-1 text-xs text-gray-500">
                                 New updates will appear here once available.
                             </p>
                         </div>
@@ -262,13 +301,11 @@ export default function NotificationsPage() {
                                             isClickable
                                                 ? 'cursor-pointer hover:-translate-y-0.5 hover:shadow-md'
                                                 : 'cursor-default'
-                                        } `}
+                                        }`}
                                     >
                                         <div className="flex flex-wrap items-start justify-between gap-2">
-                                            {/* Left: title + message */}
                                             <div className="min-w-0 flex-1">
                                                 <div className="flex flex-wrap items-center gap-2">
-                                                    {/* Unread dot */}
                                                     {!item.isRead && (
                                                         <span className="h-2 w-2 flex-shrink-0 rounded-full bg-indigo-500" />
                                                     )}
@@ -288,7 +325,6 @@ export default function NotificationsPage() {
                                                 </p>
                                             </div>
 
-                                            {/* Right: timestamp + dismiss */}
                                             <div className="flex items-center gap-2">
                                                 <div className="flex items-center gap-1 text-xs text-gray-400">
                                                     <Clock3 className="h-3.5 w-3.5" />
@@ -296,7 +332,6 @@ export default function NotificationsPage() {
                                                         item.created_at,
                                                     )}
                                                 </div>
-                                                {/* Dismiss button — appears on hover */}
                                                 <button
                                                     onClick={(e) =>
                                                         handleRemove(e, item.id)
@@ -309,7 +344,6 @@ export default function NotificationsPage() {
                                             </div>
                                         </div>
 
-                                        {/* Action row — only for unread */}
                                         {!item.isRead && (
                                             <div className="mt-3 flex items-center gap-2">
                                                 <button
@@ -325,7 +359,6 @@ export default function NotificationsPage() {
                                                     Mark as read
                                                 </button>
 
-                                                {/* View button — only if action_URL exists */}
                                                 {item.action_url && (
                                                     <button
                                                         onClick={(e) =>
@@ -343,7 +376,6 @@ export default function NotificationsPage() {
                                             </div>
                                         )}
 
-                                        {/* If already read but has action_URL — show subtle link */}
                                         {item.isRead && item.action_url && (
                                             <div className="mt-2">
                                                 <span className="inline-flex items-center gap-1 text-xs text-gray-400 transition-colors group-hover:text-indigo-500">
@@ -357,6 +389,26 @@ export default function NotificationsPage() {
                             })}
                         </div>
                     )}
+
+                    {/* ── Infinite scroll sentinel ──────────────────────────── */}
+                    <div
+                        ref={sentinelRef}
+                        className="mt-4 flex justify-center py-2"
+                    >
+                        {loading && (
+                            <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                Loading more…
+                            </span>
+                        )}
+                        {!nextPageUrl &&
+                            !loading &&
+                            notificationList.length > 0 && (
+                                <p className="text-xs text-muted-foreground/50">
+                                    You've seen all notifications
+                                </p>
+                            )}
+                    </div>
                 </div>
             </div>
         </AppLayout>

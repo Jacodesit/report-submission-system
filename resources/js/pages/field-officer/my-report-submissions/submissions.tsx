@@ -251,7 +251,7 @@ export default function Submissions({
                                                                     </p>
                                                                 </div>
                                                                 <div
-                                                                    className={`rounded-full px-3 py-1.5 ${statusDetails.bgColor} ${statusDetails.borderColor} border`}
+                                                                    className={`inline-flex rounded-full px-3 py-1.5 ${statusDetails.bgColor} ${statusDetails.borderColor} border`}
                                                                 >
                                                                     <div className="flex items-center gap-1.5">
                                                                         <StatusIcon
@@ -266,15 +266,15 @@ export default function Submissions({
                                                                         </span>
                                                                     </div>
                                                                     <CardTitle className="text-sm font-semibold lg:text-base">
-                                                                        Report #
+                                                                        {/* Report #
                                                                         {
                                                                             submission.id
-                                                                        }
+                                                                        } */}
                                                                     </CardTitle>
                                                                 </div>
                                                             </div>
                                                             <div
-                                                                className={`rounded-full px-3 py-1.5 ${statusDetails.bgColor} ${statusDetails.borderColor} border`}
+                                                                className={`w-25 text-center rounded-full px-3 py-1.5 ${statusDetails.bgColor} ${statusDetails.borderColor} border`}
                                                             >
                                                                 <div className="flex items-center gap-1.5">
                                                                     <StatusIcon

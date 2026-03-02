@@ -144,7 +144,7 @@ export default function EditReportSubmissionDialog({
                 </Button>
             </DialogTrigger>
 
-            <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto p-0 overflow-x-hidden">
+            <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto p-0">
                 <div className="sticky top-0 z-10 border-b bg-white px-6 py-4 dark:dark:bg-[#141414] ">
                     <DialogHeader>
                         <div className="flex items-start justify-between">
@@ -152,7 +152,7 @@ export default function EditReportSubmissionDialog({
                                 <DialogTitle className="text-sm lg:text-xl text-start">
                                     Edit Submission: {report.title}
                                 </DialogTitle>
-                                <DialogDescription className="mt-1 text-xs lg:text-sm text-gray-500 dark:text-gray-400">
+                                <DialogDescription className="text-start mt-1 text-xs lg:text-sm text-gray-500 dark:text-gray-400">
                                     Update your submission details and files
                                     below.
                                 </DialogDescription>
@@ -185,20 +185,25 @@ export default function EditReportSubmissionDialog({
                                         <div className="mt-2 grid gap-2 text-sm sm:grid-cols-2">
                                             <div className="flex items-center gap-2">
                                                 <Calendar className="text-blue-600 dark:text-blue-300 h-3.5 w-3.5" />
-                                                <span className='dark:text-blue-300'>
+                                                <span className='dark:text-blue-300 text-xs'>
                                                     Deadline:{' '}
                                                 </span>
-                                                {formatDate(
-                                                    report.deadline,
-                                                )}
+                                                <span className='text-xs'>
+                                                    {formatDate(
+                                                        report.deadline,
+                                                    )}
+                                                </span>
                                             </div>
                                             {report.program && (
                                                 <div className="flex items-center gap-2">
                                                     <Folder className="text-blue-600 dark:text-blue-300 h-3.5 w-3.5" />
-                                                    <span className='dark:text-blue-300'>
+                                                    <span className='dark:text-blue-300 text-xs'>
                                                         Program:{' '}
+
                                                     </span>
-                                                    {report.program.name}
+                                                    <span className='text-xs'>
+                                                        {report.program.name}
+                                                    </span>
                                                 </div>
                                             )}
                                         </div>
@@ -385,7 +390,7 @@ export default function EditReportSubmissionDialog({
                                                                                             file.name
                                                                                         }
                                                                                     </p>
-                                                                                    <p className="text-xs text-muted-foreground dark:text-gray-400">
+                                                                                    <p className="hidden md:block text-xs text-muted-foreground dark:text-gray-400">
                                                                                         {file.size
                                                                                             ? `${(file.size / 1024).toFixed(2)} KB`
                                                                                             : 'Unknown size'}
@@ -393,7 +398,7 @@ export default function EditReportSubmissionDialog({
                                                                                 </div>
                                                                             </div>
 
-                                                                            <div className="flex gap-2">
+                                                                            <div className="flex gap-1 lg:gap-2">
                                                                                 <Button
                                                                                     variant="outline"
                                                                                     size="sm"
@@ -406,7 +411,7 @@ export default function EditReportSubmissionDialog({
                                                                                         )
                                                                                     }
                                                                                 >
-                                                                                    <Eye className="mr-2 h-4 w-4" />
+                                                                                    <Eye className="lg:mr-1 h-4 w-4" />
                                                                                     View
                                                                                 </Button>
 
@@ -420,7 +425,7 @@ export default function EditReportSubmissionDialog({
                                                                                             file.download_url
                                                                                         }
                                                                                     >
-                                                                                        <Download className="mr-2 h-4 w-4" />
+                                                                                        <Download className="mr-1 lg:mr-2 h-4 w-4" />
                                                                                         Download
                                                                                     </a>
                                                                                 </Button>
@@ -620,7 +625,7 @@ export default function EditReportSubmissionDialog({
                             )}
 
                             {/* Action Buttons */}
-                            <div className="sticky bottom-0 -mx-6 border-t bg-white px-6 py-4 dark:border-gray-800 dark:dark:bg-[#141414]">
+                            <div className="sticky bottom-0 border-t bg-white px-6 py-4 dark:border-gray-800 dark:dark:bg-[#141414]">
                                 <div className="flex justify-end gap-3">
                                     <Button
                                         type="button"

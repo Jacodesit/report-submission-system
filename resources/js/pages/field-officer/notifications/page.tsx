@@ -192,11 +192,11 @@ export default function NotificationsPage() {
             <Head title="Notifications" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 {/* ── Header Card ─────────────────────────────────────────── */}
-                <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+                <div className="rounded-xl border bg-white dark:bg-[#141414] dark:border p-4 shadow-sm">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                         <div>
-                            <h1 className="flex items-center gap-2 text-xl font-semibold text-foreground">
-                                <BellRing className="h-5 w-5 text-primary" />
+                            <h1 className="flex items-center gap-2 text-lg lg:text-xl font-semibold text-foreground">
+                                <BellRing className="h-4 w-4 lg:h-5 lg:w-5 text-primary" />
                                 Notifications
                             </h1>
                             <p className="mt-1 text-sm text-muted-foreground">
@@ -207,7 +207,7 @@ export default function NotificationsPage() {
                         <button
                             onClick={markAllNotificationsAsRead}
                             disabled={unreadCount === 0}
-                            className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary/20 hover:bg-accent hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
+                            className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-xs lg:text-sm font-medium text-foreground transition-colors hover:border-primary/20 hover:bg-accent hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             <CheckCheck className="h-4 w-4" />
                             Mark all as read
@@ -215,7 +215,7 @@ export default function NotificationsPage() {
                     </div>
 
                     {/* Stats */}
-                    <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                    <div className="mt-4 grid gap-3 sm:grid-cols-3 ">
                         <div className="rounded-lg border border-border bg-muted/50 px-4 py-3">
                             <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
                                 Total
@@ -244,7 +244,7 @@ export default function NotificationsPage() {
                 </div>
 
                 {/* ── List Card ────────────────────────────────────────────── */}
-                <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+                <div className="rounded-xl bg-white dark:bg-[#141414] dark:border p-4 shadow-sm">
                     {/* Filter row */}
                     <div className="mb-4 flex items-center gap-2">
                         <Filter className="h-4 w-4 text-muted-foreground" />
@@ -259,8 +259,8 @@ export default function NotificationsPage() {
                                         onClick={() => setFilter(value)}
                                         className={`rounded-full px-3 py-1.5 text-xs font-semibold tracking-wide capitalize transition-colors ${
                                             filter === value
-                                                ? 'bg-indigo-100 text-indigo-700'
-                                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                                ? 'bg-gray-300 text-foreground dark:bg-gray-300/20 dark:text-accent-foreground'
+                                                : 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-[#010101] dark:text-foreground dark:hover:bg-gray-800'
                                         }`}
                                     >
                                         {value}
