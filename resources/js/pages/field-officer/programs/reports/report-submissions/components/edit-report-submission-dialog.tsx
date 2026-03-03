@@ -139,20 +139,27 @@ export default function EditReportSubmissionDialog({
                     size="sm"
                     className="text-blue-600 hover:bg-blue-50 hover:text-blue-700 dark:text-blue-400 dark:hover:bg-blue-950 dark:hover:text-blue-300"
                 >
-                    <Pencil className="mr-1 h-3.5 w-3.5" />
-                    Edit
+                    {submission.status === 'returned' ? (
+                        <p>Resubmit</p>
+                    ) : (
+                        <>
+                            {' '}
+                            <Pencil className="mr-1 h-3.5 w-3.5" />
+                            Edit
+                        </>
+                    )}
                 </Button>
             </DialogTrigger>
 
-            <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto p-0 overflow-x-hidden">
-                <div className="sticky top-0 z-10 border-b bg-white px-6 py-4 dark:dark:bg-[#141414] ">
+            <DialogContent className="max-h-[90vh] max-w-3xl overflow-x-hidden overflow-y-auto p-0">
+                <div className="sticky top-0 z-10 border-b bg-white px-6 py-4 dark:dark:bg-[#141414]">
                     <DialogHeader>
                         <div className="flex items-start justify-between">
                             <div>
-                                <DialogTitle className="text-sm lg:text-xl text-start">
+                                <DialogTitle className="text-start text-sm lg:text-xl">
                                     Edit Submission: {report.title}
                                 </DialogTitle>
-                                <DialogDescription className="mt-1 text-xs lg:text-sm text-gray-500 dark:text-gray-400">
+                                <DialogDescription className="mt-1 text-xs text-gray-500 lg:text-sm dark:text-gray-400">
                                     Update your submission details and files
                                     below.
                                 </DialogDescription>
@@ -173,9 +180,9 @@ export default function EditReportSubmissionDialog({
                     {({ processing, errors }) => (
                         <div className="space-y-8 px-6 pb-6">
                             {/* Report Info Banner */}
-                            <div className="rounded-xl border bg-blue-50/50 p-4 dark:border dark:dark:bg-[#141414] ">
+                            <div className="rounded-xl border bg-blue-50/50 p-4 dark:border dark:dark:bg-[#141414]">
                                 <div className="flex items-start gap-3">
-                                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 dark:border dark:dark:bg-[#141414] ">
+                                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 dark:border dark:dark:bg-[#141414]">
                                         <FileText className="h-4 w-4 text-blue-600 dark:text-blue-300" />
                                     </div>
                                     <div className="flex-1">
@@ -184,18 +191,16 @@ export default function EditReportSubmissionDialog({
                                         </h4>
                                         <div className="mt-2 grid gap-2 text-sm sm:grid-cols-2">
                                             <div className="flex items-center gap-2">
-                                                <Calendar className="text-blue-600 dark:text-blue-300 h-3.5 w-3.5" />
-                                                <span className='dark:text-blue-300'>
+                                                <Calendar className="h-3.5 w-3.5 text-blue-600 dark:text-blue-300" />
+                                                <span className="dark:text-blue-300">
                                                     Deadline:{' '}
                                                 </span>
-                                                {formatDate(
-                                                    report.deadline,
-                                                )}
+                                                {formatDate(report.deadline)}
                                             </div>
                                             {report.program && (
                                                 <div className="flex items-center gap-2">
-                                                    <Folder className="text-blue-600 dark:text-blue-300 h-3.5 w-3.5" />
-                                                    <span className='dark:text-blue-300'>
+                                                    <Folder className="h-3.5 w-3.5 text-blue-600 dark:text-blue-300" />
+                                                    <span className="dark:text-blue-300">
                                                         Program:{' '}
                                                     </span>
                                                     {report.program.name}
@@ -247,7 +252,7 @@ export default function EditReportSubmissionDialog({
                                                 submission?.description ?? ''
                                             }
                                             placeholder="Add any additional notes or context about your submission..."
-                                            className="text-xs min-h-[100px] border-gray-200 bg-white focus:border-2 focus:ring-gray-500 dark:border-gray-700 dark:dark:bg-[#141414] dark:focus:border-gray-400 dark:focus:ring-gray-400"
+                                            className="min-h-[100px] border-gray-200 bg-white text-xs focus:border-2 focus:ring-gray-500 dark:border-gray-700 dark:dark:bg-[#141414] dark:focus:border-gray-400 dark:focus:ring-gray-400"
                                         />
                                         <p className="text-xs text-gray-400 dark:text-gray-500">
                                             Optional: Provide any clarifying

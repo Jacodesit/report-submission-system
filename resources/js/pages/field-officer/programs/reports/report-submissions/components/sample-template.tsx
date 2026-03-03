@@ -85,7 +85,7 @@ export default function SampleTemplate({ templates, references }: Props) {
 
                 {/* Divider — horizontal on mobile, vertical on md+ */}
                 {/* <div className="border-t md:hidden" />
-                <div className="absolute top-4 bottom-4 left-1/2 hidden w-px bg-border md:block" /> */}
+                    <div className="absolute top-4 bottom-4 left-1/2 hidden w-px bg-border md:block" /> */}
 
                 {/* References */}
                 <div className="flex flex-col gap-3">

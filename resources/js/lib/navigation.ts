@@ -2,6 +2,9 @@ import FieldOfficerNavigationPath from '@/actions/App/Http/Controllers/FieldOffi
 import FocalPersonNavigationPath from '@/actions/App/Http/Controllers/FocalPerson/ViewController';
 import ProgramHeadNavigationPath from '@/actions/App/Http/Controllers/ProgramHead/ViewController';
 import ProvincialDirectorNavigationPath from '@/actions/App/Http/Controllers/ProvincialDirector/ViewController';
+import AdminDirectorNavigationPath from '@/actions/App/Http/Controllers/Admin/ViewController';
+
+
 import { NavItem } from '@/types';
 import { Bell, File, FileCheck, Layers, LayoutGrid, Users } from 'lucide-react';
 
@@ -99,6 +102,14 @@ export function mainNavigationPath(role: string): NavItem[] {
                     title: 'Programs',
                     href: ProvincialDirectorNavigationPath.programs().url,
                     icon: Layers,
+                },
+            ];
+        case 'admin':
+            return [
+                {
+                    title: 'Dashboard',
+                    href: AdminDirectorNavigationPath.dashboard().url,
+                    icon: LayoutGrid,
                 },
             ];
         default:

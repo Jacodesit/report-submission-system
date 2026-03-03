@@ -76,15 +76,15 @@ export default function SubmissionCard({
 }) {
     const [expanded, setExpanded] = useState(false);
     const timeliness = submission.timeliness
-            ? (TIMELINESS_CONFIG[
-                    submission.timeliness as keyof typeof TIMELINESS_CONFIG
-            ] ?? null)
+        ? (TIMELINESS_CONFIG[
+              submission.timeliness as keyof typeof TIMELINESS_CONFIG
+          ] ?? null)
         : null;
 
     const media: Media[] = submission.media ?? [];
 
     return (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:bg-[#171717] dark:border-0">
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-0 dark:bg-[#171717]">
             {/* Card Header */}
             <div
                 className={`flex items-start justify-between gap-3 px-5 py-4 ${expanded ? 'border-b border-gray-100' : ''}`}
@@ -93,7 +93,8 @@ export default function SubmissionCard({
                 <div className="min-w-0 flex-1">
                     <div className="mb-2 flex items-center gap-2.5">
                         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-400 to-purple-600 text-sm font-bold text-white">
-                            {submission.field_officer?.first_name?.[0] ?? '?'}
+                            {submission.field_officer?.first_name?.[0] ??
+                                '?'}{' '}
                         </div>
                         <div>
                             <p className="text-sm font-semibold text-gray-900 dark:text-foreground">
@@ -141,7 +142,7 @@ export default function SubmissionCard({
                                 href={file.original_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 no-underline transition-colors hover:bg-gray-100 dark:bg-[#171717] dark:border-gray-800"
+                                className="flex items-center gap-2.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 no-underline transition-colors hover:bg-gray-100 dark:border-gray-800 dark:bg-[#171717]"
                             >
                                 <span className="text-lg">
                                     {getFileIcon(file.mime_type)}
@@ -164,7 +165,7 @@ export default function SubmissionCard({
                                                 '_blank',
                                             );
                                         }}
-                                        className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2 py-1 text-xs font-medium text-gray-600 transition-colors hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600 dark:bg-[#171717] dark:border-gray-800 dark:text-foreground dark:hover:text-indigo-600"
+                                        className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2 py-1 text-xs font-medium text-gray-600 transition-colors hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600 dark:border-gray-800 dark:bg-[#171717] dark:text-foreground dark:hover:text-indigo-600"
                                     >
                                         <svg
                                             className="h-3 w-3"
@@ -187,7 +188,7 @@ export default function SubmissionCard({
                                             link.download = file.file_name;
                                             link.click();
                                         }}
-                                        className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2 py-1 text-xs font-medium text-gray-600 transition-colors hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600 dark:bg-[#171717] dark:border-gray-800 dark:text-foreground dark:hover:text-indigo-600"
+                                        className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2 py-1 text-xs font-medium text-gray-600 transition-colors hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600 dark:border-gray-800 dark:bg-[#171717] dark:text-foreground dark:hover:text-indigo-600"
                                     >
                                         <svg
                                             className="h-3 w-3"
