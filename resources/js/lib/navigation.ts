@@ -67,6 +67,11 @@ export function mainNavigationPath(role: string): NavItem[] {
                     icon: File,
                 },
                 {
+                    title: 'Submission Logs',
+                    href: FocalPersonNavigationPath.submissionPage().url,
+                    icon: FileCheck,
+                },
+                {
                     title: 'Notifications',
                     href: FocalPersonNavigationPath.notifications().url,
                     icon: Bell,
